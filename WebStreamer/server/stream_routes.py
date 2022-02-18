@@ -12,6 +12,8 @@ from aiohttp.http_exceptions import BadStatusLine
 from WebStreamer.bot import multi_clients, work_loads
 from WebStreamer.server.exceptions import FIleNotFound, InvalidHash
 from WebStreamer import Var, utils, StartTime, __version__, StreamBot
+from base64 import standard_b64encode, standard_b64decode
+from flask import render_template
 
 
 routes = web.RouteTableDef()
