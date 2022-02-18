@@ -151,9 +151,19 @@ async def media_streamer(request: web.Request, message_id: int, secure_hash: str
 def download_page():
     try:
         dl_url = request.args['id']
+    except Exception as e:
+        edata = "id is wrong"
+        return edata
     try:
-        dl_url = b64_to_str(dl_url)
-        except Exception as e:
+        encypted = request.args['en']
+    except Exception as e:
+        encypted = 1
+    if encypted == "0":
+        dl_url = dl_url
+    else:
+        try:
+            dl_url = b64_to_str(dl_url)
+        except:
             return "404"
         return render_template(
             "WebStreamer/template/okda.html",
