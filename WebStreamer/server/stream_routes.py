@@ -156,7 +156,7 @@ def download_page():
         return iox
     try:
         dl_url = b64_to_str(dl_url)
-        except:
+        except Exception as e:
             return "404"
         return render_template(
             "WebStreamer/template/okda.html",
