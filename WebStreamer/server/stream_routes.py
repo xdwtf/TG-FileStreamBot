@@ -7,13 +7,15 @@ import math
 import logging
 import secrets
 import mimetypes
+import requests
 from aiohttp import web
 from aiohttp.http_exceptions import BadStatusLine
 from WebStreamer.bot import multi_clients, work_loads
 from WebStreamer.server.exceptions import FIleNotFound, InvalidHash
 from WebStreamer import Var, utils, StartTime, __version__, StreamBot
 from base64 import standard_b64encode, standard_b64decode
-from flask import render_template
+from flask import render_template, request
+from urllib.parse import unquote_plus
 
 
 routes = web.RouteTableDef()
