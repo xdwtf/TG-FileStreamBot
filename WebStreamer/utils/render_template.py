@@ -28,12 +28,12 @@ async def render_page(message_id):
         async with aiofiles.open('WebStreamer/template/req.html') as r:
             heading = 'Watch {}'.format(file_name)
             tag = mime_type.split('/')[0].strip()
-            html = (await r.read()).replace('tag', tag) % (heading, file_name, src)
+            html = (await r.read()).replace('tag', tag) % (heading, file_name, href)
     elif mime_type.lower() in audio_formats:
         async with aiofiles.open('WebStreamer/template/req.html') as r:
             heading = 'Listen {}'.format(file_name)
             tag = mime_type.split('/')[0].strip()
-            html = (await r.read()).replace('tag', tag) % (heading, file_name, src)
+            html = (await r.read()).replace('tag', tag) % (heading, file_name, href)
     else:
         async with aiofiles.open('WebStreamer/template/dl.html') as r:
             async with aiohttp.ClientSession() as s:
