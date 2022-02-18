@@ -157,6 +157,6 @@ def download_page():
         except:
             return "404"
         return render_template(
-            "okda.html",
+            "WebStreamer/template/okda.html",
             dl_url=dl_url
     )
