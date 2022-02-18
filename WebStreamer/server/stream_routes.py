@@ -147,8 +147,21 @@ async def media_streamer(request: web.Request, message_id: int, secure_hash: str
 
     return return_resp
 
-@routes.get("/download?id=")
-async def download_page(request):
+@routes.get("/download")
+def checker_page():
+    try:
+        chk_type = request.args['type']
+    except:
+        return "F"
+    if chk_type.lower() == "test":
+        return test()
+    if chk_type.lower() == "download":
+        return download_page()
+    return 
+
+
+
+def download_page():
     try:
         dl_url = request.args['id']
     except Exception as e:
@@ -169,3 +182,8 @@ async def download_page(request):
             "WebStreamer/template/okda.html",
             dl_url=dl_url
     )
+    
+
+    
+ def test():
+    return render_template("test.html")
