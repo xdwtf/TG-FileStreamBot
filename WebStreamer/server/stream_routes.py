@@ -151,9 +151,6 @@ async def media_streamer(request: web.Request, message_id: int, secure_hash: str
 def download_page():
     try:
         dl_url = request.args['id']
-    except Exception as e:
-        iox = "id is wrong"
-        return iox
     try:
         dl_url = b64_to_str(dl_url)
         except Exception as e:
