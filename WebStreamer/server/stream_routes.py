@@ -17,6 +17,7 @@ from base64 import standard_b64encode, standard_b64decode
 from flask import render_template, request
 from urllib.parse import unquote_plus
 
+app = Flask(__name__)
 
 routes = web.RouteTableDef()
 
@@ -147,7 +148,7 @@ async def media_streamer(request: web.Request, message_id: int, secure_hash: str
 
     return return_resp
 
-@routes.get("/download")
+@app.route("/download")
 async def checker_page():
     try:
         chk_type = request.args['type']
