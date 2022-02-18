@@ -148,7 +148,7 @@ async def media_streamer(request: web.Request, message_id: int, secure_hash: str
     return return_resp
 
 @routes.get("/download")
-def checker_page():
+async def checker_page():
     try:
         chk_type = request.args['type']
     except:
@@ -161,7 +161,7 @@ def checker_page():
 
 
 
-def download_page():
+async def download_page():
     try:
         dl_url = request.args['id']
     except Exception as e:
@@ -185,5 +185,5 @@ def download_page():
     
 
     
-def test():
+async def test():
     return render_template("test.html")
