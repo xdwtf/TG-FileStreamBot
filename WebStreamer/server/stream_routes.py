@@ -16,6 +16,12 @@ from WebStreamer import Var, utils, StartTime, __version__, StreamBot
 
 routes = web.RouteTableDef()
 
+def b64_to_str(b64: str) -> str:
+    bytes_b64 = b64.encode('ascii')
+    bytes_str = standard_b64decode(bytes_b64)
+    __str = bytes_str.decode('ascii')
+    return __str
+
 @routes.get("/", allow_head=True)
 async def root_route_handler(_):
     return web.json_response(
@@ -136,3 +142,19 @@ async def media_streamer(request: web.Request, message_id: int, secure_hash: str
         return_resp.headers.add("Content-Length", str(file_size))
 
     return return_resp
+
+@routes.get("/download")
+def download_page():
+    try:
+        dl_url = request.args['id']
+    except Exception as e:
+        iox = "id is wrong"
+        return iox
+    try:
+        dl_url = b64_to_str(dl_url)
+        except:
+            return "404"
+        return render_template(
+            "okda.html",
+            dl_url=dl_url
+    )
