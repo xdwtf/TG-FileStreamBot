@@ -147,7 +147,7 @@ async def media_streamer(request: web.Request, message_id: int, secure_hash: str
 
     return return_resp
 
-@routes.get("/download", allow_head=True)
+@routes.get("/download?id=")
 async def download_page(request):
     try:
         dl_url = request.args['id']
