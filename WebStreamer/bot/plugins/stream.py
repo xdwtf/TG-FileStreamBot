@@ -8,7 +8,7 @@ from urllib.parse import quote_plus
 from WebStreamer.bot import StreamBot
 from WebStreamer.utils import get_hash, get_name
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
-
+from pyrogram.errors import UserNotParticipant
 
 
 
@@ -26,7 +26,35 @@ from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
     ),
     group=4,
 )
-async def media_receive_handler(_, m: Message):
+async def media_receive_handler(c, m: Message):
+    if Var.UPDATES_CHANNEL != "None":
+        try:
+            user = await c.get_chat_member(Var.UPDATES_CHANNEL, m.chat.id)
+            if user.status == "kicked":
+                await c.send_message(
+                    chat_id=m.chat.id,
+                    text="x",
+                    parse_mode="markdown",
+                    disable_web_page_preview=True
+                )
+                return
+        except UserNotParticipant:
+            await c.send_message(
+                chat_id=m.chat.id,
+                text="""x""",
+                reply_markup=InlineKeyboardMarkup(
+                    [[ InlineKeyboardButton("x", url=f"https://t.me/{Var.UPDATES_CHANNEL}") ]]
+                ),
+                parse_mode="HTML"
+            )
+            return
+        except Exception:
+            await c.send_message(
+                chat_id=m.chat.id,
+                text="x",
+                parse_mode="markdown",
+                disable_web_page_preview=True)
+            return
     log_msg = await m.forward(chat_id=Var.BIN_CHANNEL)
     stream_link = f"{Var.URL}{log_msg.message_id}/{quote_plus(get_name(m))}?hash={get_hash(log_msg)}"
     short_link = f"{Var.URL}{get_hash(log_msg)}{log_msg.message_id}"
