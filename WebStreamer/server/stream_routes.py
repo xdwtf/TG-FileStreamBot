@@ -18,7 +18,7 @@ routes = web.RouteTableDef()
 
 @routes.get("/", allow_head=True)
 async def root_route_handler(_):
-    return web.Response(text="<h1>💙</h1>",content_type="text/html")
+    return web.FileResponse('WebStreamer/template/home.html')
 
 @routes.get("/arc-sw.js", allow_head=True)
 async def arc_route_handler(_):
