@@ -34,9 +34,10 @@ async def stream_handler(request: web.Request):
             secure_hash = request.rel_url.query.get("hash")
         return await media_streamer(request, message_id, secure_hash)
     except InvalidHash as e:
-        raise web.HTTPForbidden(text=e.message)
+        logging.error(e.message)
+        return web.FileResponse('WebStreamer/template/404.html')
     except FIleNotFound as e:
-        logging.error(e)
+        logging.error(e.message)
         return web.FileResponse('WebStreamer/template/404.html')
     except (AttributeError, BadStatusLine, ConnectionResetError):
         pass
