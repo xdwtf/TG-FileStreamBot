@@ -34,7 +34,7 @@ async def stream_handler(request: web.Request):
             secure_hash = request.rel_url.query.get("hash")
         return await media_streamer(request, message_id, secure_hash)
     except InvalidHash as e:
-        logging.error(e.message)
+        logging.error(e.messagex)
         return web.FileResponse('WebStreamer/template/404.html')
     except FIleNotFound as e:
         logging.error(e.message)
