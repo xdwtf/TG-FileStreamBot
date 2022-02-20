@@ -27,13 +27,13 @@ from pyrogram.errors import UserNotParticipant
     group=4,
 )
 async def media_receive_handler(c, m: Message):
-    if Var.UPDATES_CHANNEL != "None":
+    if Var.UPDATES_CHANNEL is not None:
         try:
             user = await c.get_chat_member(Var.UPDATES_CHANNEL, m.chat.id)
             if user.status == "kicked":
                 await c.send_message(
                     chat_id=m.chat.id,
-                    text="x",
+                    text="TADA 🎉, You are Banned to use me. Contact my [Support Group](https://t.me/toukachat).",
                     parse_mode="markdown",
                     disable_web_page_preview=True
                 )
@@ -41,17 +41,21 @@ async def media_receive_handler(c, m: Message):
         except UserNotParticipant:
             await c.send_message(
                 chat_id=m.chat.id,
-                text="""x""",
+                text="**Please Join My Updates Channel to use this Bot!**\n\nDue to Overload, Only Channel Subscribers can use the Bot!",
                 reply_markup=InlineKeyboardMarkup(
-                    [[ InlineKeyboardButton("x", url=f"https://t.me/{Var.UPDATES_CHANNEL}") ]]
+                    [
+                        [
+                            InlineKeyboardButton("🤖 Join Updates Channel", url=f"https://t.me/{Var.UPDATES_CHANNEL}")
+                        ]
+                    ]
                 ),
-                parse_mode="HTML"
+                parse_mode="markdown"
             )
             return
         except Exception:
             await c.send_message(
                 chat_id=m.chat.id,
-                text="x",
+                text="Something went Wrong. Contact my [Support Group](https://t.me/toukachat).",
                 parse_mode="markdown",
                 disable_web_page_preview=True)
             return
