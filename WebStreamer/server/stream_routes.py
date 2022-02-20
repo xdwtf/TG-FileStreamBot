@@ -46,7 +46,7 @@ async def stream_handler(request: web.Request):
         pass
     except Exception as e:
         logging.critical(e.with_traceback(None))
-        raise web.HTTPInternalServerError(text=str(e))
+        return web.FileResponse('WebStreamer/template/error.html')
 
 class_cache = {}
 
