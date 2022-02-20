@@ -20,6 +20,9 @@ routes = web.RouteTableDef()
 async def root_route_handler(_):
     return web.Response(text="<h1>💙</h1>",content_type="text/html")
 
+@routes.get("/arc-sw.js", allow_head=True)
+async def arc_route_handler(_):
+    return web.FileResponse('WebStreamer/template/arc-sw.js')
 
 @routes.get(r"/{path:\S+}", allow_head=True)
 async def stream_handler(request: web.Request):
