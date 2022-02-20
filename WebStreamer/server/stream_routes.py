@@ -36,7 +36,7 @@ async def stream_handler(request: web.Request):
     except InvalidHash as e:
         raise web.HTTPForbidden(text=e.message)
     except FIleNotFound as e:
-    return web.FileResponse('WebStreamer/template/404.html')
+        return web.FileResponse('WebStreamer/template/404.html')
     except (AttributeError, BadStatusLine, ConnectionResetError):
         pass
     except Exception as e:
