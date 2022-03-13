@@ -4,6 +4,7 @@ from pyrogram.types import Message
 from pyrogram.file_id import FileId
 from pyrogram.raw.types.messages import Messages
 from WebStreamer.server.exceptions import FIleNotFound
+from base64 import standard_b64encode
 
 
 async def parse_file_id(message: "Message") -> Optional[FileId]:
@@ -53,3 +54,9 @@ def get_hash(media_msg: Message) -> str:
 def get_name(media_msg: Message) -> str:
     media = get_media_from_message(media_msg)
     return str(getattr(media, "file_name", "")) 
+
+def encod(__str: str) -> str:
+    str_bytes = __str.encode("ascii")
+    bytes_b64 = standard_b64encode(str_bytes)
+    encoded = bytes_b64.decode("ascii")
+    return encoded
