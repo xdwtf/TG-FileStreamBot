@@ -63,7 +63,7 @@ async def media_receive_handler(c, m: Message):
     stream_link = f"{Var.URL}{log_msg.message_id}/{quote_plus(get_name(m))}?hash={get_hash(log_msg)}"
     short_link = f"{Var.URL}{get_hash(log_msg)}{log_msg.message_id}"
     xc = f"{Var.URL}{get_hash(log_msg)}{log_msg.message_id}&en=0&type=direct"
-    xf = encod(x)
+    xf = encod(xc)
     x_link = f"https://xdwtf.vercel.app/play?id={xf}"
     await log_msg.reply_text(text=f"Requested by [{m.from_user.first_name}](tg://user?id={m.from_user.id})\n**User ID:** `{m.from_user.id}`\n**Download Link:** {stream_link}\n**Rapid Link:** {short_link}", disable_web_page_preview=True, parse_mode="Markdown", quote=True)
     await m.reply_text(
