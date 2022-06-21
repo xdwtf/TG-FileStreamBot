@@ -70,7 +70,7 @@ async def media_receive_handler(c, m: Message):
     )
     if Var.FQDN == Var.BIND_ADDRESS:
         rm = None
-    await log_msg.reply_text(text=f"Requested by [{m.from_user.first_name}](tg://user?id={m.from_user.id})\n**User ID:** `{m.from_user.id}`\n**Download Link:** {stream_link}\n**Rapid Link:** {short_link}", disable_web_page_preview=True, parse_mode="Markdown", quote=True)
+    await log_msg.reply_text(text=f"Requested by [{m.from_user.first_name}](tg://user?id={m.from_user.id})\n**User ID:** `{m.from_user.id}`\n**Download Link:** {stream_link}\n**Rapid Link:** {short_link}", disable_web_page_preview=True, parse_mode=ParseMode.MARKDOWN, quote=True)
     await m.reply_text(
         text="<code>{}</code>\n(<a href='{}'>shortened</a>)\n(<a href='{}'>Player</a>)".format(
             stream_link, short_link, x_link
