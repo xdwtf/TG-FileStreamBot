@@ -61,8 +61,8 @@ async def media_receive_handler(c, m: Message):
                 disable_web_page_preview=True)
             return
     log_msg = await m.forward(chat_id=Var.BIN_CHANNEL)
-    stream_link = f"{Var.URL}{log_msg.message_id}/{quote_plus(get_name(m))}?hash={get_hash(log_msg)}"
-    short_link = f"{Var.URL}{get_hash(log_msg)}{log_msg.message_id}"
+    stream_link = f"{Var.URL}{log_msg.id}/{quote_plus(get_name(m))}?hash={get_hash(log_msg)}"
+    short_link = f"{Var.URL}{get_hash(log_msg)}{log_msg.id}"
     x_link = "https://xdwtf.vercel.app/play?id=" + encod(short_link)
   # logging.info(f"Generated link: {stream_link} for {m.from_user.first_name}")
     rm = InlineKeyboardMarkup(
