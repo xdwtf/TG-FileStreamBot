@@ -64,7 +64,6 @@ async def media_receive_handler(c, m: Message):
     stream_link = f"{Var.URL}{log_msg.id}/{quote_plus(get_name(m))}?hash={get_hash(log_msg)}"
     short_link = f"{Var.URL}{get_hash(log_msg)}{log_msg.id}"
     x_link = "https://xdwtf.vercel.app/play?id=" + encod(short_link)
-  # logging.info(f"Generated link: {stream_link} for {m.from_user.first_name}")
     rm = InlineKeyboardMarkup(
         [[InlineKeyboardButton("Open", url=stream_link)]]
     )
