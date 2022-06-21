@@ -18,22 +18,11 @@ routes = web.RouteTableDef()
 
 @routes.get("/", allow_head=True)
 async def root_route_handler(_):
-    return web.json_response(
-        {
-            "server_status": "running",
-            "uptime": utils.get_readable_time(time.time() - StartTime),
-            "telegram_bot": "@" + StreamBot.username,
-            "connected_bots": len(multi_clients),
-            "loads": dict(
-                ("bot" + str(c + 1), l)
-                for c, (_, l) in enumerate(
-                    sorted(work_loads.items(), key=lambda x: x[1], reverse=True)
-                )
-            ),
-            "version": __version__,
-        }
-    )
+    return web.FileResponse('WebStreamer/template/home.html')
 
+@routes.get("/arc-sw.js", allow_head=True)
+async def arc_route_handler(_):
+    return web.FileResponse('WebStreamer/template/arc-sw.js')
 
 @routes.get(r"/{path:\S+}", allow_head=True)
 async def stream_handler(request: web.Request):
@@ -48,14 +37,16 @@ async def stream_handler(request: web.Request):
             secure_hash = request.rel_url.query.get("hash")
         return await media_streamer(request, message_id, secure_hash)
     except InvalidHash as e:
-        raise web.HTTPForbidden(text=e.message)
+        logging.error(e.messagex)
+        return web.FileResponse('WebStreamer/template/404.html')
     except FIleNotFound as e:
-        raise web.HTTPNotFound(text=e.message)
+        logging.error(e.message)
+        return web.FileResponse('WebStreamer/template/404.html')
     except (AttributeError, BadStatusLine, ConnectionResetError):
         pass
     except Exception as e:
         logging.critical(e.with_traceback(None))
-        raise web.HTTPInternalServerError(text=str(e))
+        return web.FileResponse('WebStreamer/template/error.html')
 
 class_cache = {}
 
