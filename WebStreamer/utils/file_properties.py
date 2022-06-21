@@ -53,7 +53,7 @@ def get_hash(media_msg: Message) -> str:
 
 def get_name(media_msg: Message) -> str:
     media = get_media_from_message(media_msg)
-    return str(getattr(media, "file_name", "")) 
+    return media.file_name or ""
 
 def encod(__str: str) -> str:
     str_bytes = __str.encode("ascii")
