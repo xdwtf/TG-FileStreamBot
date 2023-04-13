@@ -40,6 +40,16 @@ async def media_receive_handler(client, m: Message):
     
     try:
         log_msg = await m.forward(chat_id=Var.BIN_CHANNEL)
+    except Exception as e:
+        logger.exception(e) # Log the error
+        await m.reply("Something went wrong. Please contact the bot admin for support.", quote=True)
+        return
+    
+    if not log_msg.media:
+        await m.reply("Please send a valid media file.", quote=True)
+        return
+    
+    try:
         file_hash = get_hash(log_msg, Var.HASH_LENGTH)
         stream_link = f"{Var.URL}{log_msg.id}/{quote_plus(get_name(m))}?hash={file_hash}"
         short_link = f"{Var.URL}{file_hash}{log_msg.id}"
@@ -56,7 +66,4 @@ async def media_receive_handler(client, m: Message):
         )
     except Exception as e:
         logger.exception(e) # Log the error
-        if not m.from_user.username or m.from_user.username not in Var.ALLOWED_USERS:
-            await m.reply("Something went wrong. Please contact the bot admin for support.", quote=True)
-        else:
-            await m.reply("An unexpected error occurred. Please try again later.", quote=True)
+        await m.reply("An unexpected error occurred. Please try again later.", quote=True)
