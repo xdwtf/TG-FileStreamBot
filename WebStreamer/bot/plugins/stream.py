@@ -29,11 +29,10 @@ from pyrogram.errors import UserNotParticipant
 async def media_receive_handler(client, m: Message):
     try:
         user = await client.get_chat_member(Var.UPDATES_CHANNEL, user_id=m.from_user.id)
+        if user.status == "kicked":
+            return await m.reply("You are banned from using this bot.", quote=True)
     except UserNotParticipant:
         return await m.reply("Please join our channel first!", quote=True)
-        
-    if user.status == "kicked":
-        return await m.reply("You are banned from using this bot.", quote=True)
 
     if Var.ALLOWED_USERS and not ((str(m.from_user.id) in Var.ALLOWED_USERS) or (m.from_user.username in Var.ALLOWED_USERS)):
         return await m.reply("You are not <b>allowed to use</b> this <a href='https://github.com/EverythingSuckz/TG-FileStreamBot'>bot</a>.", quote=True)
@@ -43,10 +42,6 @@ async def media_receive_handler(client, m: Message):
     except Exception as e:
         logger.exception(e) # Log the error
         await m.reply("Something went wrong. Please contact the bot admin for support.", quote=True)
-        return
-    
-    if not log_msg.media:
-        await m.reply("Please send a valid media file.", quote=True)
         return
     
     try:
