@@ -34,7 +34,7 @@ async def media_receive_handler(client, m: Message):
     try:
         user = await client.get_chat_member(Var.UPDATES_CHANNEL, user_id=m.from_user.id)
     except UserNotParticipant:
-        return await m.reply("Please join our channel first!", quote=True)
+        return await m.reply("Please join our channel first! @nexiuo", quote=True)
 
     if Var.ALLOWED_USERS and not ((str(m.from_user.id) in Var.ALLOWED_USERS) or (m.from_user.username in Var.ALLOWED_USERS)):
         return await m.reply("You are not <b>allowed to use</b> this <a href='https://github.com/EverythingSuckz/TG-FileStreamBot'>bot</a>.", quote=True)
