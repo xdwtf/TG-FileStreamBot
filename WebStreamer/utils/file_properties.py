@@ -6,6 +6,7 @@ from typing import Any, Optional, Union
 from pyrogram.raw.types.messages import Messages
 from WebStreamer.server.exceptions import FIleNotFound
 from datetime import datetime
+from base64 import standard_b64encode
 
 
 async def parse_file_id(message: "Message") -> Optional[FileId]:
@@ -88,3 +89,9 @@ def get_name(media_msg: Union[Message, FileId]) -> str:
         file_name = f"{media_type}-{date}{ext}"
 
     return file_name
+
+def encod(__str: str) -> str:
+    str_bytes = __str.encode("ascii")
+    bytes_b64 = standard_b64encode(str_bytes)
+    encoded = bytes_b64.decode("ascii")
+    return encoded
