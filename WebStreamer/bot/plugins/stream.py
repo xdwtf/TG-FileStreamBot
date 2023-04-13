@@ -27,7 +27,7 @@ from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 )
 async def media_receive_handler(_, m: Message):
     try:
-        user = await client.get_chat_member(chat_id="your_channel_username", user_id=m.from_user.id)
+        user = await client.get_chat_member(Var.UPDATES_CHANNEL, user_id=m.from_user.id)
     except UserNotParticipant:
         return await m.reply("Please join our channel first!", quote=True)
         
