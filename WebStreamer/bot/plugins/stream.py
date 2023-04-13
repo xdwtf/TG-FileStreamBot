@@ -26,7 +26,7 @@ from pyrogram.errors import UserNotParticipant
     ),
     group=4,
 )
-async def media_receive_handler(_, m: Message):
+async def media_receive_handler(client, m: Message):
     try:
         user = await client.get_chat_member(Var.UPDATES_CHANNEL, user_id=m.from_user.id)
     except UserNotParticipant:
