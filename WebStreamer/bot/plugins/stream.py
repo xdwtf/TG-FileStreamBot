@@ -27,10 +27,12 @@ from pyrogram.errors import UserNotParticipant
     group=4,
 )
 async def media_receive_handler(client, m: Message):
+    banned_users = Var.BANNED_USERS.split() if Var.BANNED_USERS else []
+    if str(m.from_user.id) in banned_users:
+        return await m.reply("You are banned from using this bot.", quote=True)
+
     try:
         user = await client.get_chat_member(Var.UPDATES_CHANNEL, user_id=m.from_user.id)
-        if user.status == "kicked":
-            return await m.reply("You are banned from using this bot.", quote=True)
     except UserNotParticipant:
         return await m.reply("Please join our channel first!", quote=True)
 
