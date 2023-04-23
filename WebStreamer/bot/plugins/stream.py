@@ -6,7 +6,7 @@ from pyrogram import filters, errors
 from WebStreamer.vars import Var
 from urllib.parse import quote_plus
 from WebStreamer.bot import StreamBot, logger
-from WebStreamer.utils import get_hash, get_name
+from WebStreamer.utils import get_hash, get_name, encod
 from pyrogram.enums.parse_mode import ParseMode
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.errors import UserNotParticipant
@@ -45,10 +45,11 @@ async def media_receive_handler(client, m: Message):
         file_hash = get_hash(log_msg, Var.HASH_LENGTH)
         stream_link = f"{Var.URL}{log_msg.id}/{quote_plus(get_name(m))}?hash={file_hash}"
         short_link = f"{Var.URL}{file_hash}{log_msg.id}"
+        x_link = "https://xdwtf.vercel.app/play?id=" + encod(short_link)
         logger.info(f"Generated link: {stream_link} for {m.from_user.first_name}")
         await m.reply_text(
-            text="<code>{}</code>\n(<a href='{}'>shortened</a>)".format(
-                stream_link, short_link
+            text="<code>{}</code>\n(<a href='{}'>shortened</a>)\n(<a href='{}'>Player</a>)".format(
+                stream_link, short_link, x_link
             ),
             quote=True,
             parse_mode=ParseMode.HTML,
