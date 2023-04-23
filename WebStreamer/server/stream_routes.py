@@ -103,7 +103,7 @@ async def media_streamer(request: web.Request, message_id: int, secure_hash: str
     )
     mime_type = file_id.mime_type
     file_name = utils.get_name(file_id)
-    disposition = "attachment"
+    disposition = "inline"  # Update the header value
 
     if not mime_type:
         mime_type = mimetypes.guess_type(file_name)[0] or "application/octet-stream"
