@@ -1,7 +1,7 @@
 # Taken from megadlbot_oss <https://github.com/eyaadh/megadlbot_oss/blob/master/mega/webserver/routes.py>
 # Thanks to Eyaadh <https://github.com/eyaadh>
 
-import re
+import re, base64
 import time
 import math
 import logging
@@ -18,7 +18,37 @@ logger = logging.getLogger("routes")
 
 routes = web.RouteTableDef()
 
+USERS = {
+    "user1": "pass1",
+    "user2": "pass2",
+}
+
+def requires_auth(handler):
+    async def auth_handler(request):
+        auth_header = request.headers.get('Authorization')
+        if not auth_header:
+            return web.Response(status=401, headers={'WWW-Authenticate': 'Basic realm="MyApp"'})
+        
+        auth_parts = auth_header.split()
+        if len(auth_parts) != 2 or auth_parts[0].lower() != 'basic':
+            return web.Response(status=400)
+
+        try:
+            decoded = base64.b64decode(auth_parts[1]).decode('utf-8')
+            username, password = decoded.split(':', 1)
+        except (TypeError, ValueError):
+            return web.Response(status=400)
+
+        if not any(username == u and password == p for u, p in USERS.items()):
+            return web.Response(status=401, headers={'WWW-Authenticate': 'Basic realm="MyApp"'})
+
+        # User is authorized, call the original handler
+        return await handler(request)
+
+    return auth_handler
+
 @routes.get("/", allow_head=True)
+@requires_auth
 async def root_route_handler(_):
     return web.FileResponse('WebStreamer/template/home.html')
 
