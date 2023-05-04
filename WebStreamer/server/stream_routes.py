@@ -48,12 +48,12 @@ def requires_auth(handler):
     return auth_handler
 
 @routes.get("/", allow_head=True)
-@requires_auth
 async def root_route_handler(_):
     return web.FileResponse('WebStreamer/template/home.html')
 
 
 @routes.get(r"/{path:\S+}", allow_head=True)
+@requires_auth
 async def stream_handler(request: web.Request):
     try:
         path = request.match_info["path"]
