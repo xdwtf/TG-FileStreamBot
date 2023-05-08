@@ -7,7 +7,8 @@ import math
 import logging
 import secrets
 import mimetypes
-from aiohttp import web, StreamResponse, Response
+from aiohttp import web
+from aiohttp.web import StreamResponse, Response
 from aiohttp.http_exceptions import BadStatusLine
 from WebStreamer.bot import multi_clients, work_loads
 from WebStreamer.server.exceptions import FIleNotFound, InvalidHash
