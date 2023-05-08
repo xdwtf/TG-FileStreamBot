@@ -71,24 +71,21 @@ async def stream_handler(request: web.Request):
         logger.critical(str(e), exc_info=True)
         raise web.HTTPInternalServerError(text=str(e))
 
-@routes.get(r"/download")
+@routes.get(r"/download/{path:\S+}")
 async def download_handler(request: web.Request):
     try:
-        print(request)
-        secure_hash = request.rel_url.query.get("secure_hash")
         message_id = request.rel_url.query.get("message_id")
-
-        # Call the media_streamer function to stream the media file from Telegram and send the response back to the client
+        secure_hash = request.rel_url.query.get("hash")
         return await media_streamer(request, message_id, secure_hash)
     except InvalidHash as e:
-        raise web.HTTPForbidden(text=e.message)
+        return web.FileResponse('WebStreamer/template/404.html')
     except FIleNotFound as e:
-        raise web.HTTPNotFound(text=e.message)
+        return web.FileResponse('WebStreamer/template/404.html')
     except (AttributeError, BadStatusLine, ConnectionResetError):
         pass
     except Exception as e:
         logger.critical(str(e), exc_info=True)
-        raise web.HTTPInternalServerError(text=str(e))
+        return web.FileResponse('WebStreamer/template/error.html')
 
 class_cache = {}
 
