@@ -32,9 +32,9 @@ async def download_handler(request: web.Request):
         # Add the custom header to indicate that this request originated from /download
         headers = {DOWNLOAD_HEADER: "1"}
         
-        # Return the HTML response with the countdown timer and the custom header
+        redirect_url = f"/{path}"
         return web.Response(
-            text=f"<html><head><meta http-equiv='refresh' content='10;url=/{path}'><script>var count=10;var interval=setInterval(function(){{
+            text=f"<html><head><meta http-equiv='refresh' content='10;url={redirect_url}'><script>var count=10;var interval=setInterval(function(){{
                 document.getElementById('countdown').innerHTML=count;
                 count--;
             }},1000);setTimeout(function(){{clearInterval(interval)}}, 10000);</script></head><body><p>Please wait for <span id='countdown'>10</span> seconds while we redirect you to the original download path...</p></body></html>",
