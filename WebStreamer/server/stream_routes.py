@@ -34,7 +34,7 @@ async def download_handler(request: web.Request):
             text=f"""
                 <html>
                     <head>
-                        <meta http-equiv='refresh' content='0;url={redirect_url}'>
+                        <---meta http-equiv='refresh' content='0;url={redirect_url}'--->
                     </head>
                     <body>
                         <p>Please wait while we redirect you to the original download path...</p>
