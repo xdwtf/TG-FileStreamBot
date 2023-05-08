@@ -31,37 +31,8 @@ async def download_handler(request: web.Request):
         
         redirect_url = f"/{path}"
         
-        html = f"""
-            <html>
-                <head>
-                    <script type="text/javascript">
-                        function redirectToDownload() {{
-                            var xhr = new XMLHttpRequest();
-                            xhr.open("GET", "{redirect_url}", true);
-                            xhr.setRequestHeader("x-stream-download", "1");
-                            xhr.onload = function() {{
-                                if (xhr.status === 200) {{
-                                    window.location.href = "{redirect_url}";
-                                }}
-                            }};
-                            xhr.send();
-                        }}
-                    </script>
-                </head>
-                <body>
-                    <p>Please click the button below to start the download:</p>
-                    <button onclick="redirectToDownload()">Download</button>
-                </body>
-            </html>
-        """
-        
-        response = web.Response(
-            text=html,
-            status=200,
-            content_type="text/html"
-        )
-        response.headers["Access-Control-Allow-Headers"] = "x-stream-download"
-        return response
+        button_html = f'<button onclick="window.location.href=\'{redirect_url}\';" headers="{DOWNLOAD_HEADER}: true">Download File</button>'
+        return web.Response(text=button_html, content_type="text/html")
     except Exception as e:
         logger.critical(str(e), exc_info=True)
         return web.FileResponse('WebStreamer/template/error.html')
