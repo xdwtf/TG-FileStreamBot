@@ -54,7 +54,7 @@ async def stream_handler(request: web.Request):
             </script>
             </head><body>
             <h2>Your download will start automatically in <span id='timer'></span> seconds...</h2>
-            <p>If the download does not start, click <a href='/download/{secure_hash}/{message_id}'>here</a>.</p>
+            <p>If the download does not start, click <a href='/download?secure_hash={secure_hash}&message_id={message_id}'>here</a>.</p>
             </body></html>
         """
 
