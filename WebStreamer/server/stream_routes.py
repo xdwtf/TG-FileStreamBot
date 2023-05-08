@@ -25,7 +25,7 @@ async def root_route_handler(_):
 
 
 @routes.get(r"/{path:\S+}", allow_head=True)
-async def stream_handler(request):
+async def stream_handler(request: web.Request):
     try:
         path = request.match_info["path"]
         match = re.search(r"^([0-9a-f]{%s})(\d+)$" % (Var.HASH_LENGTH), path)
@@ -72,7 +72,7 @@ async def stream_handler(request):
         raise web.HTTPInternalServerError(text=str(e))
 
 @routes.get(r"/download/{secure_hash}/{message_id}")
-async def download_handler(request):
+async def download_handler(request: web.Request):
     try:
         secure_hash = request.match_info["secure_hash"]
         message_id = int(request.match_info["message_id"])
