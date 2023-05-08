@@ -74,6 +74,7 @@ async def stream_handler(request: web.Request):
 @routes.get(r"/download")
 async def download_handler(request: web.Request):
     try:
+        print(request)
         secure_hash = request.rel_url.query.get("secure_hash")
         message_id = request.rel_url.query.get("message_id")
 
