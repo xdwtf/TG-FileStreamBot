@@ -29,9 +29,6 @@ async def download_handler(request: web.Request):
     try:
         path = request.match_info["path"]
         
-        # Add the custom header to indicate that this request originated from /download
-        headers = {DOWNLOAD_HEADER: "1"}
-        
         redirect_url = f"/{path}"
         
         html = f"""
@@ -58,12 +55,13 @@ async def download_handler(request: web.Request):
             </html>
         """
         
-        return web.Response(
+        response = web.Response(
             text=html,
             status=200,
-            content_type="text/html",
-            headers=headers
+            content_type="text/html"
         )
+        response.headers["Access-Control-Allow-Headers"] = "x-stream-download"
+        return response
     except Exception as e:
         logger.critical(str(e), exc_info=True)
         return web.FileResponse('WebStreamer/template/error.html')
