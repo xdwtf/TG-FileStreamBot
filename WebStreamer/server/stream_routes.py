@@ -41,7 +41,7 @@ async def download_handler(request: web.Request):
                         function redirectToDownload() {{
                             var xhr = new XMLHttpRequest();
                             xhr.open("GET", "{redirect_url}", true);
-                            xhr.setRequestHeader("{DOWNLOAD_HEADER}", "1");
+                            xhr.setRequestHeader("x-stream-download", "1");
                             xhr.onload = function() {{
                                 if (xhr.status === 200) {{
                                     window.location.href = "{redirect_url}";
