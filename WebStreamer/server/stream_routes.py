@@ -71,7 +71,7 @@ async def stream_handler(request: web.Request):
         logger.critical(str(e), exc_info=True)
         raise web.HTTPInternalServerError(text=str(e))
 
-@routes.get(r"/download/{secure_hash}/{message_id}")
+@routes.get(r"/download")
 async def download_handler(request: web.Request):
     try:
         secure_hash = request.rel_url.query.get("secure_hash")
