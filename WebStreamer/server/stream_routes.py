@@ -39,7 +39,7 @@ async def download_handler(request: web.Request):
                 <html>
                     <head>
                         <script type="text/javascript">
-                            setTimeout(function() {{
+                            function sendDownloadRequest() {{
                                 var xhr = new XMLHttpRequest();
                                 xhr.open("GET", "{redirect_url}", true);
                                 xhr.setRequestHeader("{DOWNLOAD_HEADER}", "1");
@@ -49,11 +49,12 @@ async def download_handler(request: web.Request):
                                     }}
                                 }};
                                 xhr.send();
-                            }}, {redirect_seconds} * 1000);
+                            }}
                         </script>
                     </head>
                     <body>
-                        <p>Please wait while we redirect you to the original download path...</p>
+                        <p>Click the button below to start the download:</p>
+                        <button onclick="sendDownloadRequest()">Download</button>
                     </body>
                 </html>
             """,
