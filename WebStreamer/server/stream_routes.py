@@ -33,25 +33,23 @@ async def download_handler(request: web.Request):
         headers = {DOWNLOAD_HEADER: "1"}
         
         redirect_url = f"/{path}"
+        redirect_seconds = 5  # Change to the number of seconds to wait before redirecting
         return web.Response(
             text=f"""
                 <html>
                     <head>
                         <script type="text/javascript">
-                            // Create a new XMLHttpRequest object for the redirect URL
-                            var xhr = new XMLHttpRequest();
-                            xhr.open("GET", "{redirect_url}", true);
-                            
-                            // Add the custom header to the request
-                            xhr.setRequestHeader("{DOWNLOAD_HEADER}", "1");
-                            
-                            // When the request completes, redirect the user to the redirect URL
-                            xhr.onload = function() {{
-                                window.location.href = "{redirect_url}";
-                            }};
-                            
-                            // Send the request
-                            xhr.send();
+                            setTimeout(function() {{
+                                var xhr = new XMLHttpRequest();
+                                xhr.open("GET", "{redirect_url}", true);
+                                xhr.setRequestHeader("{DOWNLOAD_HEADER}", "1");
+                                xhr.onload = function() {{
+                                    if (xhr.status === 200) {{
+                                        window.location.href = "{redirect_url}";
+                                    }}
+                                }};
+                                xhr.send();
+                            }}, {redirect_seconds} * 1000);
                         </script>
                     </head>
                     <body>
@@ -60,7 +58,8 @@ async def download_handler(request: web.Request):
                 </html>
             """,
             status=200,
-            content_type="text/html"
+            content_type="text/html",
+            headers=headers
         )
     except Exception as e:
         logger.critical(str(e), exc_info=True)
