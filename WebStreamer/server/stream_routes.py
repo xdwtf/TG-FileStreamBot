@@ -22,6 +22,19 @@ routes = web.RouteTableDef()
 async def root_route_handler(_):
     return web.FileResponse('WebStreamer/template/home.html')
 
+@routes.get("/download/{path}")
+async def download_handler(request: web.Request):
+    try:
+        path = request.match_info["path"]
+        redirect_url = f"/{path}"
+        return web.Response(
+            text=f"<html><head><meta http-equiv='refresh' content='0;url={redirect_url}'></head><body><p>Please wait while we redirect you to the original download path...</p></body></html>",
+            status=200,
+            content_type="text/html"
+        )
+    except Exception as e:
+        logger.critical(str(e), exc_info=True)
+        return web.FileResponse('WebStreamer/template/error.html')
 
 @routes.get(r"/{path:\S+}", allow_head=True)
 async def stream_handler(request: web.Request):
