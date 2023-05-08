@@ -59,7 +59,7 @@ async def stream_handler(request: web.Request):
     try:
         path = request.match_info["path"]
 
-        logger.debug(f"Request headers: {request.headers}")
+        logger.info(f"Request headers: {request.headers}")
         # Check if the request includes the custom header to verify that it originated from /download
         if DOWNLOAD_HEADER.lower() not in (header.lower() for header in request.headers):
             return web.Response(
