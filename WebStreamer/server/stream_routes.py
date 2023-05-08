@@ -7,7 +7,7 @@ import math
 import logging
 import secrets
 import mimetypes
-from aiohttp import web
+from aiohttp import web, StreamResponse, Response
 from aiohttp.http_exceptions import BadStatusLine
 from WebStreamer.bot import multi_clients, work_loads
 from WebStreamer.server.exceptions import FIleNotFound, InvalidHash
@@ -24,7 +24,7 @@ async def root_route_handler(_):
 
 
 @routes.get(r"/{path:\S+}", allow_head=True)
-async def stream_handler(request: web.Request):
+async def stream_handler(request):
     try:
         path = request.match_info["path"]
         match = re.search(r"^([0-9a-f]{%s})(\d+)$" % (Var.HASH_LENGTH), path)
@@ -34,16 +34,61 @@ async def stream_handler(request: web.Request):
         else:
             message_id = int(re.search(r"(\d+)(?:\/\S+)?", path).group(1))
             secure_hash = request.rel_url.query.get("hash")
-        return await media_streamer(request, message_id, secure_hash)
+
+        # Create an HTML response that contains a timer and an event that will trigger automatic download of the media file after the timer expires
+        html_response = f"""
+            <html><head>
+            <title>Media Download</title>
+            <script>
+            var seconds = 10;  // Set the number of seconds for the timer
+            function countdown() {{
+                document.getElementById('timer').innerHTML = seconds;
+                seconds--;
+                if (seconds < 0) {{
+                    clearInterval(countdownTimer);
+                    window.location.href = '/download/{secure_hash}/{message_id}';  // Redirect to the download link after the timer expires
+                }}
+            }}
+            var countdownTimer = setInterval('countdown()', 1000); // Start the timer
+            </script>
+            </head><body>
+            <h2>Your download will start automatically in <span id='timer'></span> seconds...</h2>
+            <p>If the download does not start, click <a href='/download/{secure_hash}/{message_id}'>here</a>.</p>
+            </body></html>
+        """
+
+        # Send the HTML response to the client
+        return Response(content_type='text/html', text=html_response)
+
     except InvalidHash as e:
-        return web.FileResponse('WebStreamer/template/404.html')
+        raise web.HTTPForbidden(text=e.message)
     except FIleNotFound as e:
-        return web.FileResponse('WebStreamer/template/404.html')
+        raise web.HTTPNotFound(text=e.message)
     except (AttributeError, BadStatusLine, ConnectionResetError):
         pass
     except Exception as e:
         logger.critical(str(e), exc_info=True)
-        return web.FileResponse('WebStreamer/template/error.html')
+        raise web.HTTPInternalServerError(text=str(e))
+
+@routes.get(r"/download/{secure_hash}/{message_id}")
+async def download_handler(request):
+    try:
+        secure_hash = request.match_info["secure_hash"]
+        message_id = int(request.match_info["message_id"])
+
+        # Call the media_streamer function to stream the media file from Telegram and send the response back to the client
+        response = await media_streamer(request, message_id, secure_hash)
+        return response
+
+    except InvalidHash as e:
+        raise web.HTTPForbidden(text=e.message)
+    except FIleNotFound as e:
+        raise web.HTTPNotFound(text=e.message)
+    except (AttributeError, BadStatusLine, ConnectionResetError):
+        pass
+    except Exception as e:
+        logger.critical(str(e), exc_info=True)
+        raise web.HTTPInternalServerError(text=str(e))
 
 class_cache = {}
 
