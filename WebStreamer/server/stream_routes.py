@@ -60,7 +60,7 @@ async def stream_handler(request: web.Request):
         path = request.match_info["path"]
         
         # Check if the request includes the custom header to verify that it originated from /download
-        if DOWNLOAD_HEADER not in request.headers:
+        if DOWNLOAD_HEADER.lower() not in (header.lower() for header in request.headers):
             return web.Response(
                 text="Unauthorized access",
                 status=403,
