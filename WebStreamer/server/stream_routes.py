@@ -34,10 +34,21 @@ async def download_handler(request: web.Request):
         
         redirect_url = f"/{path}"
         return web.Response(
-            text=f"<html><head><meta http-equiv='refresh' content='0;url={redirect_url}'></head><body><p>Please wait while we redirect you to the original download path...</p></body></html>",
+            text=f"""
+                <html>
+                    <head>
+                        <meta http-equiv='refresh' content='0;url={redirect_url}'>
+                    </head>
+                    <body>
+                        <p>Please wait while we redirect you to the original download path...</p>
+                        <script type="text/javascript">
+                            fetch("{redirect_url}", {{headers: {repr(headers)}}});
+                        </script>
+                    </body>
+                </html>
+            """,
             status=200,
-            content_type="text/html",
-            headers=response_headers
+            content_type="text/html"
         )
     except Exception as e:
         logger.critical(str(e), exc_info=True)
