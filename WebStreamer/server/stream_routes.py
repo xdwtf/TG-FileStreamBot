@@ -47,7 +47,7 @@ async def stream_handler(request: web.Request):
                 seconds--;
                 if (seconds < 0) {{
                     clearInterval(countdownTimer);
-                    window.location.href = '/download/' + secure_hash + '/' + message_id;  // Redirect to the download link after the timer expires
+                    window.location.href = '/download?secure_hash=' + secure_hash + '&message_id=' + message_id;  // Redirect to the download link after the timer expires
                 }}
             }}
             var countdownTimer = setInterval('countdown()', 1000); // Start the timer
@@ -74,8 +74,8 @@ async def stream_handler(request: web.Request):
 @routes.get(r"/download/{secure_hash}/{message_id}")
 async def download_handler(request: web.Request):
     try:
-        secure_hash = request.match_info["secure_hash"]
-        message_id = int(request.match_info["message_id"])
+        secure_hash = request.rel_url.query.get("secure_hash")
+        message_id = request.rel_url.query.get("message_id")
 
         # Call the media_streamer function to stream the media file from Telegram and send the response back to the client
         response = await media_streamer(request, message_id, secure_hash)
