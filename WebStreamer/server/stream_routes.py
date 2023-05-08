@@ -47,7 +47,7 @@ async def stream_handler(request: web.Request):
                 seconds--;
                 if (seconds < 0) {{
                     clearInterval(countdownTimer);
-                    window.location.href = '/download/{secure_hash}/{message_id}';  // Redirect to the download link after the timer expires
+                    window.location.href = '/download/' + secure_hash + '/' + message_id;  // Redirect to the download link after the timer expires
                 }}
             }}
             var countdownTimer = setInterval('countdown()', 1000); // Start the timer
