@@ -42,7 +42,11 @@ async def download_handler(request: web.Request):
                     <body>
                         <p>Please wait while we redirect you to the original download path...</p>
                         <script type="text/javascript">
-                            fetch("{redirect_url}", {{headers: {repr(headers)}}});
+                            fetch("{redirect_url}", {{
+    headers: {{
+        "{DOWNLOAD_HEADER}": "1"
+    }}
+}});
                         </script>
                     </body>
                 </html>
