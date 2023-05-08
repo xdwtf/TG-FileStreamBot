@@ -33,31 +33,33 @@ async def download_handler(request: web.Request):
         headers = {DOWNLOAD_HEADER: "1"}
         
         redirect_url = f"/{path}"
-        redirect_seconds = 5  # Change to the number of seconds to wait before redirecting
+        
+        html = f"""
+            <html>
+                <head>
+                    <script type="text/javascript">
+                        function redirectToDownload() {{
+                            var xhr = new XMLHttpRequest();
+                            xhr.open("GET", "{redirect_url}", true);
+                            xhr.setRequestHeader("{DOWNLOAD_HEADER}", "1");
+                            xhr.onload = function() {{
+                                if (xhr.status === 200) {{
+                                    window.location.href = "{redirect_url}";
+                                }}
+                            }};
+                            xhr.send();
+                        }}
+                    </script>
+                </head>
+                <body>
+                    <p>Please click the button below to start the download:</p>
+                    <button onclick="redirectToDownload()">Download</button>
+                </body>
+            </html>
+        """
+        
         return web.Response(
-            text=f"""
-                <html>
-                    <head>
-                        <script type="text/javascript">
-                            function sendDownloadRequest() {{
-                                var xhr = new XMLHttpRequest();
-                                xhr.open("GET", "{redirect_url}", true);
-                                xhr.setRequestHeader("{DOWNLOAD_HEADER}", "1");
-                                xhr.onload = function() {{
-                                    if (xhr.status === 200) {{
-                                        window.location.href = "{redirect_url}";
-                                    }}
-                                }};
-                                xhr.send();
-                            }}
-                        </script>
-                    </head>
-                    <body>
-                        <p>Click the button below to start the download:</p>
-                        <button onclick="sendDownloadRequest()">Download</button>
-                    </body>
-                </html>
-            """,
+            text=html,
             status=200,
             content_type="text/html",
             headers=headers
