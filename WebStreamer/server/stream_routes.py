@@ -15,6 +15,8 @@ from WebStreamer import Var, utils, StartTime, __version__, StreamBot
 
 logger = logging.getLogger("routes")
 
+# The name of the custom HTTP header for validation
+DOWNLOAD_HEADER = "X-Stream-Download"
 
 routes = web.RouteTableDef()
 
@@ -26,14 +28,19 @@ async def root_route_handler(_):
 async def download_handler(request: web.Request):
     try:
         path = request.match_info["path"]
-        redirect_url = f"/{path}"
+        
+        # Add the custom header to indicate that this request originated from /download
+        headers = {DOWNLOAD_HEADER: "1"}
+        
+        # Return the HTML response with the countdown timer and the custom header
         return web.Response(
-            text=f"<html><head><meta http-equiv='refresh' content='10;url={redirect_url}'><script>var count=10;var interval=setInterval(function(){{
+            text=f"<html><head><meta http-equiv='refresh' content='10;url=/{path}'><script>var count=10;var interval=setInterval(function(){{
                 document.getElementById('countdown').innerHTML=count;
                 count--;
             }},1000);setTimeout(function(){{clearInterval(interval)}}, 10000);</script></head><body><p>Please wait for <span id='countdown'>10</span> seconds while we redirect you to the original download path...</p></body></html>",
             status=200,
-            content_type="text/html"
+            content_type="text/html",
+            headers=headers
         )
     except Exception as e:
         logger.critical(str(e), exc_info=True)
@@ -43,6 +50,16 @@ async def download_handler(request: web.Request):
 async def stream_handler(request: web.Request):
     try:
         path = request.match_info["path"]
+        
+        # Check if the request includes the custom header to verify that it originated from /download
+        if DOWNLOAD_HEADER not in request.headers:
+            return web.Response(
+                text="Unauthorized access",
+                status=403,
+                content_type="text/plain"
+            )
+        
+        # Proceed with media streaming as before
         match = re.search(r"^([0-9a-f]{%s})(\d+)$" % (Var.HASH_LENGTH), path)
         if match:
             secure_hash = match.group(1)
