@@ -78,9 +78,7 @@ async def download_handler(request: web.Request):
         message_id = request.rel_url.query.get("message_id")
 
         # Call the media_streamer function to stream the media file from Telegram and send the response back to the client
-        response = await media_streamer(request, message_id, secure_hash)
-        return response
-
+        return await media_streamer(request, message_id, secure_hash)
     except InvalidHash as e:
         raise web.HTTPForbidden(text=e.message)
     except FIleNotFound as e:
