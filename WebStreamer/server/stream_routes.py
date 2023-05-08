@@ -33,11 +33,6 @@ async def download_handler(request: web.Request):
         headers = {DOWNLOAD_HEADER: "1"}
         
         redirect_url = f"/{path}"
-        
-        # Combine the headers from the original request and the custom header into a new dictionary
-        response_headers = dict(request.headers.items())
-        response_headers.update(headers)
-        
         return web.Response(
             text=f"<html><head><meta http-equiv='refresh' content='0;url={redirect_url}'></head><body><p>Please wait while we redirect you to the original download path...</p></body></html>",
             status=200,
