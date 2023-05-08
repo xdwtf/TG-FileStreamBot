@@ -29,29 +29,33 @@ async def download_handler(request: web.Request):
     try:
         path = request.match_info["path"]
         
+        # Add the custom header to indicate that this request originated from /download
+        headers = {DOWNLOAD_HEADER: "1"}
+        
         redirect_url = f"/{path}"
         return web.Response(
             text=f"""
                 <html>
                     <head>
-                        <---meta http-equiv='refresh' content='0;url={redirect_url}'--->
-                    </head>
-                    <body>
-                        <p>Please wait while we redirect you to the original download path...</p>
                         <script type="text/javascript">
                             // Create a new XMLHttpRequest object for the redirect URL
                             var xhr = new XMLHttpRequest();
                             xhr.open("GET", "{redirect_url}", true);
                             
                             // Add the custom header to the request
-                            xhr.setRequestHeader("x-stream-download", "1");
+                            xhr.setRequestHeader("{DOWNLOAD_HEADER}", "1");
+                            
+                            // When the request completes, redirect the user to the redirect URL
+                            xhr.onload = function() {{
+                                window.location.href = "{redirect_url}";
+                            }};
                             
                             // Send the request
                             xhr.send();
-                            
-                            // Redirect the user to the redirect URL
-                            window.location.href = "{redirect_url}";
                         </script>
+                    </head>
+                    <body>
+                        <p>Please wait while we redirect you to the original download path...</p>
                     </body>
                 </html>
             """,
