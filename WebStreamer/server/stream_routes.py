@@ -99,11 +99,8 @@ async def media_streamer(request: web.Request, message_id: int, secure_hash: str
     req_length = until_bytes - from_bytes + 1
     part_count = math.ceil(until_bytes / chunk_size) - math.floor(offset / chunk_size)
 
-    # Check if the client supports resuming
-    support_resume = True if "Range" in request.headers else False
-
     body = tg_connect.yield_file(
-        file_id, index, offset, first_part_cut, last_part_cut, part_count, chunk_size, support_resume
+        file_id, index, offset, first_part_cut, last_part_cut, part_count, chunk_size
     )
     mime_type = file_id.mime_type
     file_name = utils.get_name(file_id)
