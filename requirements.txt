@@ -1,4 +1,8 @@
-aiohttp<=3.8.1
-pyrogram<=2.0.93 
-python-dotenv<=0.20.0
-TgCrypto<=1.2.5
+aiohttp
+# pyrogram<=2.0.93 
+pyroblack
+python-dotenv
+TgCrypto
+motor
+pymongo
+async_pymongo

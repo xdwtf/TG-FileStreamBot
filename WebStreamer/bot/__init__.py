@@ -1,12 +1,11 @@
 # This file is a part of TG-FileStreamBot
 # Coding : Jyothis Jayanth [@EverythingSuckz]
 
-
-import os
-import os.path
-from ..vars import Var
-import logging
+import logging, os
 from pyrogram import Client
+from async_pymongo import AsyncClient
+
+from ..vars import Var
 
 logger = logging.getLogger("bot")
 
@@ -17,16 +16,18 @@ if Var.USE_SESSION_FILE:
     if not os.path.isdir(sessions_dir):
         os.makedirs(sessions_dir)
 
+mongo_conn = AsyncClient(Var.DATABASE_URL)
+
 StreamBot = Client(
     name="WebStreamer",
     api_id=Var.API_ID,
     api_hash=Var.API_HASH,
-    workdir=sessions_dir if Var.USE_SESSION_FILE else "WebStreamer",
     plugins={"root": "WebStreamer/bot/plugins"},
     bot_token=Var.BOT_TOKEN,
     sleep_threshold=Var.SLEEP_THRESHOLD,
     workers=Var.WORKERS,
-    in_memory=not Var.USE_SESSION_FILE,
+    in_memory=False,
+    mongodb=dict(connection=mongo_conn, remove_peers=False)
 )
 
 multi_clients = {}
