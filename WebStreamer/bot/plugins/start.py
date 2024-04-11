@@ -124,6 +124,16 @@ async def remove_allowed_user(_, m: Message):
     else:
         await m.reply("Invalid command usage. Use /unauth <user_id>.")
 
+@StreamBot.on_message(filters.command("log") & filters.private & filters.user(Var.OWNER_ID))
+async def send_log(_, m: Message):
+    log_file_path = "streambot.log"
+    if os.path.exists(log_file_path):
+        with open(log_file_path, "rb") as file:
+            await m.reply_document(document=file, caption="Here's the log file.")
+    else:
+        await m.reply("Log file not found.")
+
+
 @StreamBot.on_message(filters.command("broadcast") & filters.private & filters.user(Var.OWNER_ID) & filters.reply)
 async def broadcast_(c, m):
     all_users = await db.get_all_users()
