@@ -119,3 +119,4 @@ sessions/
 *.session-journal
 .env
 test.py
+broadcast.txt

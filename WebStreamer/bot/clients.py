@@ -7,8 +7,10 @@ from os import environ
 from ..vars import Var
 from pyrogram import Client
 from . import multi_clients, work_loads, sessions_dir, StreamBot
+from async_pymongo import AsyncClient
 
 logger = logging.getLogger("multi_client")
+mongo_conn = AsyncClient(Var.DATABASE_URL)
 
 async def initialize_clients():
     multi_clients[0] = StreamBot
@@ -39,7 +41,8 @@ async def initialize_clients():
                 sleep_threshold=Var.SLEEP_THRESHOLD,
                 workdir=sessions_dir if Var.USE_SESSION_FILE else Client.PARENT_DIR,
                 no_updates=True,
-                in_memory=not Var.USE_SESSION_FILE,
+                in_memory=False,  # Set to False to use MongoDB storage
+                mongodb=dict(connection=mongo_conn, remove_peers=False)  # MongoDB configuration
             ).start()
             work_loads[client_id] = 0
             return client_id, client

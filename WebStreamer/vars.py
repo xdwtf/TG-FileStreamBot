@@ -15,11 +15,8 @@ class Var(object):
     BOT_TOKEN = str(environ.get("BOT_TOKEN"))
     SLEEP_THRESHOLD = int(environ.get("SLEEP_THRESHOLD", "60"))  # 1 minte
     WORKERS = int(environ.get("WORKERS", "6"))  # 6 workers = 6 commands at once
-    BIN_CHANNEL = int(
-        environ.get("BIN_CHANNEL", None)
-    )  # you NEED to use a CHANNEL when you're using MULTI_CLIENT
+    BIN_CHANNEL = int(environ.get("BIN_CHANNEL", None))  # you NEED to use a CHANNEL when you're using MULTI_CLIENT
     UPDATES_CHANNEL = str(environ.get("UPDATES_CHANNEL", None))
-    BANNED_USERS = str(environ.get("BANNED_USERS", ""))
     PORT = int(environ.get("PORT", 8080))
     BIND_ADDRESS = str(environ.get("WEB_SERVER_BIND_ADDRESS", "0.0.0.0"))
     PING_INTERVAL = int(environ.get("PING_INTERVAL", "1200"))  # 20 minutes
@@ -35,4 +32,6 @@ class Var(object):
     KEEP_ALIVE = str(environ.get("KEEP_ALIVE", "0").lower()) in  ("1", "true", "t", "yes", "y")
     DEBUG = str(environ.get("DEBUG", "0").lower()) in ("1", "true", "t", "yes", "y")
     USE_SESSION_FILE = str(environ.get("USE_SESSION_FILE", "0").lower()) in ("1", "true", "t", "yes", "y")
-    ALLOWED_USERS = [x.strip("@ ") for x in str(environ.get("ALLOWED_USERS", "") or "").split(",") if x.strip("@ ")]
+    DATABASE_URL = str(environ.get("DATABASE_URL"))
+    DATABASE_NAME = str(environ.get("DATABASE_NAME"))
+    OWNER_ID = int(environ.get("OWNER_ID"))
