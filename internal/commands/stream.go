@@ -52,7 +52,7 @@ func sendLink(ctx *ext.Context, client *gotgproto.Client, u *ext.Update) error {
 		return dispatcher.EndGroups
 	}
 	channelId := config.ValueOf.FChannelID
-        member, err := client.GetChatMember(channelId, chatId)
+        member, err := client.API().GetChatMember(channelId, chatId)
         if err != nil {
 	    utils.Logger.Sugar().Error(err)
             ctx.Reply(u, fmt.Sprintf("Error - %s", err.Error()), nil)
