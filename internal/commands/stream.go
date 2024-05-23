@@ -6,6 +6,7 @@ import (
 
 	"EverythingSuckz/fsb/config"
 	"EverythingSuckz/fsb/internal/utils"
+	"EverythingSuckz/fsb/internal/bot"
 
 	"github.com/celestix/gotgproto/dispatcher"
 	"github.com/celestix/gotgproto/dispatcher/handlers"
@@ -51,7 +52,7 @@ func sendLink(ctx *ext.Context, u *ext.Update) error {
 		return dispatcher.EndGroups
 	}
 	channelId := config.ValueOf.FChannelID
-        member, err := ctx.GetChatMember(channelId, chatId)
+        member, err := bot.GetChatMember(channelId, chatId)
         if err != nil {
 	    utils.Logger.Sugar().Error(err)
             ctx.Reply(u, fmt.Sprintf("Error - %s", err.Error()), nil)
