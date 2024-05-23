@@ -50,6 +50,18 @@ func sendLink(ctx *ext.Context, u *ext.Update) error {
 		ctx.Reply(u, "You are not allowed to use this bot.", nil)
 		return dispatcher.EndGroups
 	}
+	channelId := config.ValueOf.FChannelID
+        member, err := ctx.Bot().GetChatMember(channelId, chatId)
+        if err != nil {
+	    utils.Logger.Sugar().Error(err)
+            ctx.Reply(u, fmt.Sprintf("Error - %s", err.Error()), nil)
+            return dispatcher.EndGroups
+        }
+        if member.Status == "left" || member.Status == "kicked" {
+            joinLink := fmt.Sprintf("https://t.me/%s", config.ValueOf.FChannelID)
+            ctx.Reply(u, fmt.Sprintf("Please join our channel to use this bot: @nexiuo"), nil)
+            return dispatcher.EndGroups
+        }
 	supported, err := supportedMediaFilter(u.EffectiveMessage)
 	if err != nil {
 		return err
