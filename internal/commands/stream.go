@@ -7,6 +7,7 @@ import (
 	"EverythingSuckz/fsb/config"
 	"EverythingSuckz/fsb/internal/utils"
 
+	"github.com/celestix/gotgproto"
 	"github.com/celestix/gotgproto/dispatcher"
 	"github.com/celestix/gotgproto/dispatcher/handlers"
 	"github.com/celestix/gotgproto/ext"
