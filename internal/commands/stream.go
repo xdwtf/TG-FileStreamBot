@@ -6,7 +6,6 @@ import (
 
 	"EverythingSuckz/fsb/config"
 	"EverythingSuckz/fsb/internal/utils"
-	"EverythingSuckz/fsb/internal/bot"
 
 	"github.com/celestix/gotgproto/dispatcher"
 	"github.com/celestix/gotgproto/dispatcher/handlers"
@@ -41,7 +40,7 @@ func supportedMediaFilter(m *types.Message) (bool, error) {
 	}
 }
 
-func sendLink(ctx *ext.Context, u *ext.Update) error {
+func sendLink(ctx *ext.Context, client *gotgproto.Client, u *ext.Update) error {
 	chatId := u.EffectiveChat().GetID()
 	peerChatId := ctx.PeerStorage.GetPeerById(chatId)
 	if peerChatId.Type != int(storage.TypeUser) {
@@ -52,7 +51,7 @@ func sendLink(ctx *ext.Context, u *ext.Update) error {
 		return dispatcher.EndGroups
 	}
 	channelId := config.ValueOf.FChannelID
-        member, err := bot.GetChatMember(channelId, chatId)
+        member, err := client.GetChatMember(channelId, chatId)
         if err != nil {
 	    utils.Logger.Sugar().Error(err)
             ctx.Reply(u, fmt.Sprintf("Error - %s", err.Error()), nil)
