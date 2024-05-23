@@ -42,6 +42,7 @@ type config struct {
 	ApiHash        string       `envconfig:"API_HASH" required:"true"`
 	BotToken       string       `envconfig:"BOT_TOKEN" required:"true"`
 	LogChannelID   int64        `envconfig:"LOG_CHANNEL" required:"true"`
+	FChannelID     int64        `envconfig:"FChannelID" required:"true"`
 	Dev            bool         `envconfig:"DEV" default:"false"`
 	Port           int          `envconfig:"PORT" default:"8080"`
 	Host           string       `envconfig:"HOST" default:""`
@@ -75,6 +76,7 @@ func SetFlagsFromConfig(cmd *cobra.Command) {
 	cmd.Flags().Int32("api-id", ValueOf.ApiID, "Telegram API ID")
 	cmd.Flags().String("api-hash", ValueOf.ApiHash, "Telegram API Hash")
 	cmd.Flags().String("bot-token", ValueOf.BotToken, "Telegram Bot Token")
+	cmd.Flags().Int64("f-channel", ValueOf.FChannelID, "Telegram F Channel ID")
 	cmd.Flags().Int64("log-channel", ValueOf.LogChannelID, "Telegram Log Channel ID")
 	cmd.Flags().Bool("dev", ValueOf.Dev, "Enable development mode")
 	cmd.Flags().IntP("port", "p", ValueOf.Port, "Server port")
@@ -102,6 +104,10 @@ func (c *config) loadConfigFromArgs(log *zap.Logger, cmd *cobra.Command) {
 	logChannelID, _ := cmd.Flags().GetString("log-channel")
 	if logChannelID != "" {
 		os.Setenv("LOG_CHANNEL", logChannelID)
+	}
+	FChannelID, _ := cmd.Flags().GetString("f-channel")
+	if FChannelID != "" {
+		os.Setenv("FChannelID", FChannelID)
 	}
 	dev, _ := cmd.Flags().GetBool("dev")
 	if dev {
