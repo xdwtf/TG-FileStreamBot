@@ -58,7 +58,6 @@ func sendLink(ctx *ext.Context, u *ext.Update) error {
             return dispatcher.EndGroups
         }
         if member.Status == "left" || member.Status == "kicked" {
-            joinLink := fmt.Sprintf("https://t.me/%s", config.ValueOf.FChannelID)
             ctx.Reply(u, fmt.Sprintf("Please join our channel to use this bot: @nexiuo"), nil)
             return dispatcher.EndGroups
         }
