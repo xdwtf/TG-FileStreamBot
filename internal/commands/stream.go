@@ -51,7 +51,7 @@ func sendLink(ctx *ext.Context, u *ext.Update) error {
 		return dispatcher.EndGroups
 	}
 	channelId := config.ValueOf.FChannelID
-        member, err := ctx.Bot().GetChatMember(channelId, chatId)
+        member, err := ctx.GetChatMember(channelId, chatId)
         if err != nil {
 	    utils.Logger.Sugar().Error(err)
             ctx.Reply(u, fmt.Sprintf("Error - %s", err.Error()), nil)
